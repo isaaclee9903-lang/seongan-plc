@@ -45,6 +45,12 @@ a{color:inherit}
 #section{display:flex;align-items:center;gap:12px}
 #section i{width:12px;height:12px;border-radius:50%;background:var(--sec,var(--ink));transition:background .5s}
 #counter{font-variant-numeric:tabular-nums;color:var(--muted)}
+#chrome-right{display:flex;align-items:center;gap:22px}
+#fs{pointer-events:auto;display:flex;align-items:center;gap:8px;font-size:17px;font-weight:700;padding:8px 14px;border-radius:10px;border:1.5px solid var(--line);color:var(--muted);transition:background .2s,color .2s}
+#fs:hover{background:var(--ink);border-color:var(--ink);color:#fff}
+#fs svg{width:18px;height:18px;fill:none;stroke:currentColor;stroke-width:2.2;stroke-linecap:round;stroke-linejoin:round}
+#stage.on-dark #fs{border-color:rgba(255,255,255,.25);color:rgba(255,255,255,.75)}
+#stage.on-dark #fs:hover{background:#fff;color:var(--ink)}
 #stage.on-dark #chrome-top{color:rgba(255,255,255,.85)}
 #stage.on-dark #counter{color:rgba(255,255,255,.5)}
 #thread{position:absolute;left:120px;right:120px;bottom:44px;height:6px;display:flex;gap:6px;z-index:20}
@@ -318,7 +324,7 @@ h2{font-size:72px;margin-bottom:40px}
 <div id="viewport">
 <div id="stage">
 
-<div id="chrome-top"><div id="section"><i></i><span></span></div><div id="counter"></div></div>
+<div id="chrome-top"><div id="section"><i></i><span></span></div><div id="chrome-right"><div id="counter"></div><button id="fs" type="button"><svg viewBox="0 0 24 24"><path d="M4 9V4h5M20 9V4h-5M4 15v5h5M20 15v5h-5"/></svg><span>전체 화면</span></button></div></div>
 
 <!-- 1 -->
 <section class="slide dark cover" data-group="성안중학교 전문적 학습공동체" data-c="#F5A21C">
@@ -686,8 +692,13 @@ h2{font-size:72px;margin-bottom:40px}
     else if (['ArrowLeft','PageUp','Backspace'].includes(e.key)) { e.preventDefault(); prev(); }
     else if (e.key === 'Home') go(0, 0);
     else if (e.key === 'End') go(slides.length-1, 0);
-    else if (e.key.toLowerCase() === 'f') document.fullscreenElement ? document.exitFullscreen() : document.documentElement.requestFullscreen?.();
+    else if (e.key.toLowerCase() === 'f') toggleFs();
   });
+
+  const fsBtn = document.getElementById('fs');
+  function toggleFs(){ document.fullscreenElement ? document.exitFullscreen() : document.documentElement.requestFullscreen?.(); }
+  fsBtn.addEventListener('click', e => { e.stopPropagation(); toggleFs(); fsBtn.blur(); });
+  document.addEventListener('fullscreenchange', () => fsBtn.querySelector('span').textContent = document.fullscreenElement ? '전체 화면 끄기' : '전체 화면');
 
   // click: card flip, links pass through, otherwise left third = back, rest = forward
   stage.addEventListener('click', e => {

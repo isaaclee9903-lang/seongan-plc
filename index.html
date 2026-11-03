@@ -279,13 +279,18 @@ h2{font-size:72px;margin-bottom:40px}
 .slide.active .strand{animation:draw 2s cubic-bezier(.6,0,.3,1) forwards}
 .slide.active .strand.s2{animation-delay:.25s}
 .slide.active .strand.s3{animation-delay:.5s}
-.flame-g{transform-origin:1180px 470px;transform:scale(.2);opacity:0}
-.slide.active .flame-g{animation:ignite 1.2s cubic-bezier(.2,.9,.2,1.2) 1.9s forwards}
-@keyframes ignite{to{transform:none;opacity:1}}
-.flame-g .flk{transform-origin:1180px 600px;animation:flicker 2.4s ease-in-out infinite}
-@keyframes flicker{50%{transform:scaleY(1.04) scaleX(.97)}}
-.conv-labels{position:absolute;left:120px;top:0;width:620px;height:900px}
-.cl{position:absolute;left:0;width:600px;opacity:0;transform:translateX(-20px);transition:all .6s}
+.word{font-family:inherit;font-size:240px;font-weight:900;letter-spacing:-12px}
+.word-stroke{fill:none;stroke:url(#wg);stroke-width:2.5;stroke-dasharray:900;stroke-dashoffset:900}
+.slide.active .word-stroke{animation:write 2.4s cubic-bezier(.45,0,.2,1) 1.3s forwards}
+@keyframes write{to{stroke-dashoffset:0}}
+.word-fill{fill:url(#wg);opacity:0}
+.slide.active .word-fill{animation:fillin 1.1s ease 3.3s forwards}
+@keyframes fillin{to{opacity:1}}
+.word-glow{opacity:0;filter:blur(38px)}
+.slide.active .word-glow{animation:bloom 2.2s ease-out 3.9s forwards}
+@keyframes bloom{0%{opacity:0}35%{opacity:.75}100%{opacity:.28}}
+.conv-labels{position:absolute;left:120px;top:0;width:560px;height:900px}
+.cl{position:absolute;left:0;width:540px;opacity:0;transform:translateX(-20px);transition:all .6s}
 .slide.active .cl{opacity:1;transform:none}
 .slide.active .cl:nth-child(1){transition-delay:.3s}
 .slide.active .cl:nth-child(2){transition-delay:.55s}
@@ -293,8 +298,10 @@ h2{font-size:72px;margin-bottom:40px}
 .cl b{display:block;font-size:30px;font-weight:850;margin-bottom:6px}
 .cl p{font-size:22px;line-height:1.5;color:rgba(255,255,255,.72);font-weight:550}
 .conv-head{position:absolute;left:120px;top:110px;font-size:52px;font-weight:850;letter-spacing:-.03em}
-.flame-word{position:absolute;left:1030px;top:745px;width:300px;text-align:center;font-size:44px;font-weight:900;letter-spacing:-.03em;opacity:0;transition:opacity .8s 2.6s}
-.slide.active .flame-word{opacity:1}
+.word-sub{position:absolute;left:880px;top:618px;width:580px;display:flex;align-items:center;gap:22px;font-size:40px;font-weight:800;letter-spacing:-.02em;opacity:0;transform:translateY(16px);transition:opacity .8s ease,transform .8s cubic-bezier(.2,.8,.2,1)}
+.word-sub::before{content:"";height:3px;flex:1;background:linear-gradient(90deg,#4A6BEA,#EC3B1F,#F5A21C);border-radius:2px;transform:scaleX(0);transform-origin:left;transition:transform 1s cubic-bezier(.6,0,.2,1)}
+.slide.active .word-sub{opacity:1;transform:none;transition-delay:4.3s}
+.slide.active .word-sub::before{transform:none;transition-delay:4.5s}
 
 /* ---------- 13 next ---------- */
 .next{display:grid;grid-template-columns:repeat(3,1fr);gap:30px;margin-top:20px}
@@ -552,15 +559,14 @@ h2{font-size:72px;margin-bottom:40px}
   <div class="glow"></div>
   <svg class="conv-svg" viewBox="0 0 1600 900" aria-hidden="true">
     <defs>
-      <linearGradient id="fg" x1="0" y1="1" x2="0" y2="0"><stop offset="0" stop-color="#EC3B1F"/><stop offset=".7" stop-color="#F56A1F"/><stop offset="1" stop-color="#F5A21C"/></linearGradient>
+      <linearGradient id="wg" gradientUnits="userSpaceOnUse" x1="880" y1="0" x2="1460" y2="0"><stop offset="0" stop-color="#5B7BF0"/><stop offset=".5" stop-color="#EC3B1F"/><stop offset="1" stop-color="#F5A21C"/></linearGradient>
     </defs>
-    <path class="strand s1" stroke="#4A6BEA" d="M700 300 C 900 300, 1000 470, 1150 520"/>
-    <path class="strand s2" stroke="#EC3B1F" d="M700 490 C 900 490, 1000 510, 1150 530"/>
-    <path class="strand s3" stroke="#F5A21C" d="M700 680 C 900 680, 1000 560, 1150 540"/>
-    <g class="flame-g"><g class="flk">
-      <path fill="url(#fg)" d="M1180 270 C 1225 345, 1300 395, 1290 500 C 1282 590, 1235 640, 1180 650 C 1125 640, 1078 590, 1070 500 C 1062 410, 1140 360, 1180 270 Z"/>
-      <path fill="#fff" opacity=".9" d="M1185 400 C 1200 450, 1225 480, 1218 540 C 1212 585, 1195 610, 1180 612 C 1162 608, 1148 585, 1146 545 C 1144 495, 1175 470, 1185 400 Z"/>
-    </g></g>
+    <path class="strand s1" stroke="#4A6BEA" d="M640 300 C 760 300, 790 420, 880 430"/>
+    <path class="strand s2" stroke="#EC3B1F" d="M640 490 C 740 490, 790 500, 880 500"/>
+    <path class="strand s3" stroke="#F5A21C" d="M640 680 C 760 680, 790 580, 880 570"/>
+    <text class="word word-glow" x="880" y="570" fill="url(#wg)">문해력</text>
+    <text class="word word-fill" x="880" y="570">문해력</text>
+    <text class="word word-stroke" x="880" y="570">문해력</text>
   </svg>
   <div class="conv-head">세 갈래가 모인 곳</div>
   <div class="conv-labels">
@@ -568,7 +574,7 @@ h2{font-size:72px;margin-bottom:40px}
     <div class="cl" style="top:440px"><b style="color:#FF7B5F">AI 논술형 평가</b><p>글쓰기 평가와 피드백을 더 자주 할 수 있습니다</p></div>
     <div class="cl" style="top:630px"><b style="color:var(--ember)">직접 만든 앱</b><p>교과 어휘 학습 도구를 우리 손으로 만들었습니다</p></div>
   </div>
-  <div class="flame-word">문해력 향상</div>
+  <div class="word-sub">향상</div>
 </section>
 
 <!-- 13 -->

@@ -1,0 +1,763 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>하이러닝 및 에듀테크 전학공</title>
+<meta name="description" content="2026 성안중학교 하이러닝 및 에듀테크 전문적 학습공동체 결과 나눔 발표">
+<link rel="icon" href="assets/seongan-logo.png">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable.min.css">
+<style>
+:root{
+  --paper:#F3F5FB;
+  --paper-2:#E6EBF7;
+  --ink:#0E1A4A;
+  --muted:#56618A;
+  --line:#C9D2EA;
+  --blue:#2340A6;
+  --flame:#EC3B1F;
+  --ember:#F5A21C;
+  --night:#0B1440;
+  --white:#FFFFFF;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{height:100%;background:var(--night);overflow:hidden}
+body{font-family:"Pretendard Variable",Pretendard,-apple-system,"Apple SD Gothic Neo","Malgun Gothic",sans-serif;color:var(--ink);-webkit-font-smoothing:antialiased;word-break:keep-all}
+button{font:inherit;color:inherit;background:none;border:0;cursor:pointer}
+a{color:inherit}
+:focus-visible{outline:3px solid var(--ember);outline-offset:3px;border-radius:6px}
+
+/* ---------- stage ---------- */
+#viewport{position:fixed;inset:0}
+#stage{position:absolute;left:50%;top:50%;width:1600px;height:900px;transform-origin:center;overflow:hidden;background:var(--paper)}
+.slide{position:absolute;inset:0;padding:120px 120px 110px;opacity:0;visibility:hidden;transform:translateX(60px);transition:opacity .6s ease,transform .7s cubic-bezier(.2,.8,.2,1),visibility 0s .7s}
+.slide.past{transform:translateX(-60px)}
+.slide.active{opacity:1;visibility:visible;transform:none;transition:opacity .6s ease .1s,transform .8s cubic-bezier(.2,.8,.2,1) .1s,visibility 0s}
+.slide.dark{background:var(--night);color:var(--white)}
+.slide:not(.dark){background:var(--paper)}
+
+/* step reveals */
+[data-step]{opacity:0;transform:translateY(18px);transition:opacity .5s ease,transform .6s cubic-bezier(.2,.8,.2,1)}
+[data-step].on{opacity:1;transform:none}
+
+/* ---------- chrome ---------- */
+#chrome-top{position:absolute;left:120px;right:120px;top:44px;display:flex;justify-content:space-between;align-items:center;z-index:20;font-size:19px;font-weight:600;pointer-events:none;transition:color .5s}
+#section{display:flex;align-items:center;gap:12px}
+#section i{width:12px;height:12px;border-radius:50%;background:var(--sec,var(--ink));transition:background .5s}
+#counter{font-variant-numeric:tabular-nums;color:var(--muted)}
+#stage.on-dark #chrome-top{color:rgba(255,255,255,.85)}
+#stage.on-dark #counter{color:rgba(255,255,255,.5)}
+#thread{position:absolute;left:120px;right:120px;bottom:44px;height:6px;display:flex;gap:6px;z-index:20}
+#thread button{flex:1;height:100%;border-radius:3px;background:var(--c);opacity:.22;transition:opacity .4s,transform .4s}
+#thread button.done{opacity:.55}
+#thread button.now{opacity:1;transform:scaleY(1.7)}
+#stage.on-dark #thread button{opacity:.3}
+#stage.on-dark #thread button.now{opacity:1}
+
+/* ---------- type ---------- */
+.kicker{font-size:24px;font-weight:600;color:var(--muted);margin-bottom:22px}
+.dark .kicker{color:rgba(255,255,255,.6)}
+h1,h2{font-weight:850;letter-spacing:-.035em;line-height:1.12}
+h2{font-size:72px;margin-bottom:40px}
+.lead{font-size:30px;line-height:1.6;color:var(--muted);font-weight:500;max-width:30em}
+.dark .lead{color:rgba(255,255,255,.72)}
+.note{font-size:20px;color:var(--muted);line-height:1.5}
+
+/* ---------- 1 cover ---------- */
+.cover{display:grid;grid-template-columns:1fr 560px;align-items:center;padding-top:0;padding-bottom:0}
+#embers{position:absolute;inset:0;width:100%;height:100%}
+.cover-text{position:relative;z-index:2}
+.cover h1{font-size:132px;line-height:1.02;letter-spacing:-.05em}
+.cover h1 span{display:block;overflow:hidden}
+.cover h1 span b{display:block;font-weight:900;transform:translateY(105%);transition:transform 1s cubic-bezier(.2,.8,.2,1)}
+.cover.active h1 span b{transform:none}
+.cover.active h1 span:nth-child(2) b{transition-delay:.15s}
+.cover.active h1 span:nth-child(3) b{transition-delay:.3s}
+.cover h1 .l3{background:linear-gradient(90deg,var(--ember),var(--flame));-webkit-background-clip:text;background-clip:text;color:transparent}
+.cover-meta{margin-top:56px;font-size:26px;color:rgba(255,255,255,.7);line-height:1.6;opacity:0;transition:opacity 1s .9s}
+.cover.active .cover-meta{opacity:1}
+.cover-meta strong{color:#fff;font-weight:700}
+.logo-wrap{position:relative;z-index:2;justify-self:center;width:420px;height:420px}
+.logo{width:100%;height:100%;border-radius:50%;overflow:hidden;background:#fff;box-shadow:0 0 0 14px rgba(255,255,255,.06),0 0 120px 10px rgba(236,59,31,.35);transform:scale(.85);opacity:0;transition:transform 1.2s cubic-bezier(.2,.8,.2,1) .2s,opacity .8s .2s}
+.cover.active .logo{transform:none;opacity:1}
+.logo img{width:104%;height:104%;margin:-2% 0 0 -1%;object-fit:cover;display:block}
+.hint{position:absolute;right:120px;bottom:84px;font-size:18px;color:rgba(255,255,255,.45);z-index:2}
+
+/* ---------- 2 overview ---------- */
+.ov{display:grid;grid-template-columns:1.05fr 1fr;gap:90px;align-items:start}
+.purpose{list-style:none;margin-top:8px}
+.purpose li{font-size:31px;line-height:1.5;font-weight:600;padding:26px 0;border-top:2px solid var(--line)}
+.purpose li:last-child{border-bottom:2px solid var(--line)}
+.purpose small{display:block;font-size:20px;color:var(--muted);font-weight:600;margin-bottom:6px}
+.stats{display:grid;grid-template-columns:1fr 1fr;gap:28px;margin-top:8px}
+.stat{background:#fff;border-radius:28px;padding:34px 36px 30px;border:1px solid var(--line)}
+.stat .num{font-size:96px;font-weight:900;letter-spacing:-.05em;line-height:1;font-variant-numeric:tabular-nums;color:var(--blue)}
+.stat .num em{font-style:normal;font-size:40px;margin-left:4px}
+.stat p{font-size:22px;color:var(--muted);margin-top:14px;font-weight:600}
+.stat.wide{grid-column:span 2;display:flex;align-items:center;justify-content:space-between}
+.stat.wide .num{font-size:52px;color:var(--ink)}
+.stat.wide p{margin:0}
+
+/* ---------- 3 timeline ---------- */
+.legend{display:flex;gap:30px;font-size:22px;font-weight:700;margin:-12px 0 64px}
+.legend span{display:flex;align-items:center;gap:10px}
+.legend i{width:14px;height:14px;border-radius:50%}
+.tl{position:relative;display:grid;grid-template-columns:repeat(7,1fr);gap:18px}
+.tl::before{content:"";position:absolute;left:0;right:0;top:15px;height:3px;background:var(--line);transform-origin:left;transform:scaleX(0);transition:transform 1.4s cubic-bezier(.6,0,.2,1)}
+.slide.active .tl::before{transform:none}
+.stop{position:relative;padding-top:52px;opacity:0;transform:translateY(16px);transition:opacity .5s,transform .6s}
+.slide.active .stop{opacity:1;transform:none}
+.stop::before{content:"";position:absolute;left:0;top:4px;width:26px;height:26px;border-radius:50%;background:var(--paper);border:5px solid var(--ink)}
+.stop .d{font-size:30px;font-weight:850;letter-spacing:-.02em}
+.stop .t{font-size:18px;color:var(--muted);font-weight:600;margin:4px 0 16px}
+.stop .w{font-size:22px;line-height:1.5;font-weight:600}
+.tl{margin-top:40px}
+.tags{display:flex;flex-wrap:wrap;gap:6px;margin-top:14px}
+.tag{font-size:16px;font-weight:700;color:#fff;padding:5px 11px;border-radius:99px}
+.tag.b{background:var(--blue)}.tag.f{background:var(--flame)}.tag.e{background:var(--ember);color:var(--ink)}
+.stop.today::before{background:var(--flame);border-color:var(--flame);box-shadow:0 0 0 8px rgba(236,59,31,.18)}
+.stop.today .d{color:var(--flame)}
+
+/* ---------- section header pattern ---------- */
+.sec-tag{display:inline-flex;align-items:center;gap:12px;font-size:22px;font-weight:800;color:var(--c);margin-bottom:22px}
+.sec-tag i{width:34px;height:34px;border-radius:50%;background:var(--c);color:#fff;display:grid;place-items:center;font-style:normal;font-size:18px}
+
+/* ---------- 4 hi-learning ---------- */
+.hl-flow{display:grid;grid-template-columns:1fr 150px 1fr;align-items:center;margin-top:20px}
+.hl-box{background:#fff;border-radius:32px;padding:40px;border:1px solid var(--line);min-height:330px}
+.hl-box h3{font-size:40px;font-weight:850;letter-spacing:-.03em;margin-bottom:6px}
+.hl-box .sub{font-size:21px;color:var(--muted);font-weight:600;margin-bottom:28px}
+.chips{display:flex;flex-wrap:wrap;gap:10px}
+.chip{font-size:21px;font-weight:650;padding:10px 18px;border-radius:14px;background:var(--paper-2)}
+.hl-box.board{background:var(--blue);color:#fff;border-color:var(--blue)}
+.hl-box.board .sub{color:rgba(255,255,255,.7)}
+.stack{position:relative;height:150px;margin-top:10px}
+.stack div{position:absolute;left:0;right:0;height:46px;border-radius:12px;background:rgba(255,255,255,.14);display:flex;align-items:center;padding:0 18px;font-size:19px;font-weight:600;opacity:0;transform:translateY(-40px)}
+.slide.active .stack div{animation:drop .6s cubic-bezier(.2,.8,.2,1) forwards}
+.stack div:nth-child(1){top:104px;animation-delay:1.0s!important}
+.stack div:nth-child(2){top:52px;animation-delay:1.5s!important}
+.stack div:nth-child(3){top:0;animation-delay:2.0s!important}
+@keyframes drop{to{opacity:1;transform:none}}
+.arrow-flow{position:relative;height:6px;margin:0 22px;background:var(--line);border-radius:3px;overflow:hidden}
+.arrow-flow::after{content:"";position:absolute;inset:0;width:40%;background:var(--blue);border-radius:3px;animation:flow 1.6s linear infinite}
+@keyframes flow{from{transform:translateX(-100%)}to{transform:translateX(260%)}}
+.rename{margin-top:46px;font-size:24px;font-weight:600;color:var(--muted)}
+.rename b{color:var(--ink)}
+
+/* ---------- 5 flip cards ---------- */
+.flips{display:grid;grid-template-columns:repeat(3,1fr);gap:26px;perspective:1600px}
+.card{position:relative;height:222px;cursor:pointer;transform-style:preserve-3d;transition:transform .8s cubic-bezier(.3,.7,.2,1)}
+.card.flipped{transform:rotateY(180deg)}
+.card .f,.card .bk{position:absolute;inset:0;border-radius:26px;backface-visibility:hidden;-webkit-backface-visibility:hidden;padding:34px}
+.card .f{background:#fff;border:1px solid var(--line);display:flex;flex-direction:column;justify-content:space-between}
+.card .f svg{width:56px;height:56px;stroke:var(--blue);fill:none;stroke-width:2.2;stroke-linecap:round;stroke-linejoin:round}
+.card .f h3{font-size:36px;font-weight:850;letter-spacing:-.03em}
+.card .bk{background:var(--blue);color:#fff;transform:rotateY(180deg);display:flex;flex-direction:column;justify-content:center}
+.card .bk h3{font-size:22px;font-weight:700;opacity:.7;margin-bottom:12px}
+.card .bk p{font-size:27px;line-height:1.45;font-weight:650}
+.flip-hint{position:absolute;right:120px;top:142px;font-size:19px;color:var(--muted);font-weight:600}
+
+/* ---------- 6 role play ---------- */
+.rp{display:grid;grid-template-columns:1fr 1fr;gap:80px;align-items:center}
+.devices{position:relative;height:500px}
+.dev{position:absolute;width:330px;height:420px;border-radius:30px;background:#fff;border:1px solid var(--line);padding:24px;box-shadow:0 30px 60px -30px rgba(14,26,74,.35)}
+.dev .who{font-size:20px;font-weight:800;margin-bottom:16px;display:flex;align-items:center;gap:8px}
+.dev .who i{width:10px;height:10px;border-radius:50%}
+.dev.s{left:0;top:60px}.dev.t{right:0;top:0}
+.dev.s .who i{background:var(--ember)}.dev.t .who i{background:var(--blue)}
+.sheet{background:var(--paper);border-radius:14px;height:300px;padding:18px;position:relative;overflow:hidden}
+.sheet .ln{height:12px;border-radius:6px;background:var(--line);margin-bottom:14px}
+.ink{position:absolute;left:22px;top:150px;width:240px;height:70px}
+.ink path{fill:none;stroke:var(--ember);stroke-width:5;stroke-linecap:round;stroke-dasharray:420;stroke-dashoffset:420}
+.slide.active .ink path{animation:draw 1.6s ease .8s forwards}
+@keyframes draw{to{stroke-dashoffset:0}}
+.mon{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
+.mon div{height:88px;border-radius:12px;background:var(--paper);position:relative;overflow:hidden}
+.mon div::after{content:"";position:absolute;left:10px;right:10px;top:30px;height:6px;border-radius:3px;background:var(--line);box-shadow:0 14px 0 var(--line),0 28px 0 var(--line)}
+.mon .live{outline:3px solid var(--ember);animation:pulse 1.6s ease-in-out infinite}
+.mon .live::after{background:var(--ember);box-shadow:0 14px 0 var(--line),0 28px 0 var(--line)}
+@keyframes pulse{50%{outline-color:rgba(245,162,28,.25)}}
+.bubble{position:absolute;right:30px;top:330px;background:var(--blue);color:#fff;font-size:21px;font-weight:700;padding:16px 22px;border-radius:20px 20px 4px 20px;box-shadow:0 20px 40px -18px rgba(35,64,166,.7)}
+.missions{display:flex;flex-wrap:wrap;gap:12px;margin-top:34px}
+.missions span{font-size:21px;font-weight:650;padding:10px 18px;border-radius:99px;border:2px solid var(--line);background:#fff}
+
+/* ---------- 7 AI grading ---------- */
+.ai{display:grid;grid-template-columns:360px 1fr 360px;align-items:center;gap:40px;height:360px}
+.papers{position:relative;height:350px}
+.paper{position:absolute;left:30px;width:250px;height:310px;background:#fff;border-radius:16px;border:1px solid var(--line);padding:24px;box-shadow:0 20px 40px -24px rgba(14,26,74,.4)}
+.paper .ln{height:9px;border-radius:5px;background:var(--line);margin-bottom:12px}
+.paper .ln:nth-child(3n){width:70%}
+.paper b{display:block;font-size:17px;color:var(--muted);margin-bottom:16px}
+.paper:nth-child(1){top:0;transform:rotate(-6deg)}
+.paper:nth-child(2){top:20px;left:50px;transform:rotate(3deg)}
+.paper:nth-child(3){top:40px;left:70px;transform:rotate(-2deg)}
+.slide.active .paper{animation:feed 3.6s cubic-bezier(.5,0,.3,1) infinite}
+.slide.active .paper:nth-child(2){animation-delay:1.2s}
+.slide.active .paper:nth-child(3){animation-delay:2.4s}
+@keyframes feed{0%,10%{opacity:1}55%{transform:translateX(420px) scale(.35) rotate(0);opacity:0}56%,100%{transform:translateX(0) rotate(0);opacity:0}}
+.engine{justify-self:center;width:300px;height:300px;border-radius:50%;background:radial-gradient(circle at 50% 40%,#ff6a3c,var(--flame) 55%,#b81f0b);display:grid;place-items:center;color:#fff;text-align:center;position:relative;box-shadow:0 30px 80px -20px rgba(236,59,31,.6)}
+.engine::before{content:"";position:absolute;inset:-22px;border-radius:50%;border:2px dashed rgba(236,59,31,.5);animation:spin 14s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
+.engine strong{font-size:34px;font-weight:850;line-height:1.25;letter-spacing:-.03em}
+.scores{display:flex;flex-direction:column;gap:14px}
+.score{display:flex;justify-content:space-between;align-items:center;background:#fff;border:1px solid var(--line);border-radius:16px;padding:16px 22px;font-size:22px;font-weight:700;opacity:0;transform:translateX(-30px)}
+.score span{font-size:30px;font-weight:900;color:var(--flame);font-variant-numeric:tabular-nums}
+.slide.active .score{animation:pop .6s cubic-bezier(.2,.8,.2,1) forwards}
+.slide.active .score:nth-child(1){animation-delay:1.9s}
+.slide.active .score:nth-child(2){animation-delay:2.4s}
+.slide.active .score:nth-child(3){animation-delay:2.9s}
+.slide.active .score:nth-child(4){animation-delay:3.4s}
+@keyframes pop{to{opacity:1;transform:none}}
+.steps3{display:flex;gap:16px;margin-top:30px}
+.steps3 div{flex:1;font-size:24px;font-weight:700;padding:20px 26px;border-radius:18px;background:var(--paper-2);display:flex;gap:14px;align-items:center}
+.steps3 b{width:38px;height:38px;flex:none;border-radius:50%;background:var(--flame);color:#fff;display:grid;place-items:center;font-size:19px}
+
+/* ---------- 8 reliability ---------- */
+.rel{display:grid;grid-template-columns:640px 1fr;gap:90px;align-items:center}
+.slope{width:640px;height:520px}
+.slope text{font-family:inherit;font-weight:800;font-size:22px;fill:var(--ink)}
+.slope .ax{stroke:var(--line);stroke-width:3}
+.slope .pair{stroke:var(--blue);stroke-width:3;opacity:.55;stroke-dasharray:500;stroke-dashoffset:500}
+.slide.active .slope .pair{animation:draw 1.2s ease forwards}
+.slope circle{fill:var(--blue)}
+.slope .odd{stroke:var(--flame);opacity:.9;stroke-width:4}
+.slope .oddc{fill:var(--flame)}
+.rel.focus .slope .pair:not(.odd){opacity:.15}
+.points{list-style:none}
+.points li{font-size:30px;font-weight:700;line-height:1.45;padding:26px 0;border-top:2px solid var(--line)}
+.points li small{display:block;font-size:21px;color:var(--muted);font-weight:600;margin-top:6px}
+.points li:last-child{border-bottom:2px solid var(--line)}
+.ex{font-size:17px;color:var(--muted);margin-top:8px}
+
+/* ---------- 9 vibe coding ---------- */
+.vibe{display:grid;grid-template-columns:1fr 760px;gap:70px;align-items:center}
+.term{background:var(--night);border-radius:26px;padding:30px 34px;color:#fff;height:520px;box-shadow:0 40px 80px -40px rgba(11,20,64,.8);display:flex;flex-direction:column;gap:20px;overflow:hidden}
+.term .bar{display:flex;gap:8px}
+.term .bar i{width:13px;height:13px;border-radius:50%;background:rgba(255,255,255,.2)}
+.ask{align-self:flex-end;max-width:88%;background:var(--ember);color:var(--ink);font-size:24px;font-weight:700;line-height:1.5;padding:18px 24px;border-radius:22px 22px 6px 22px;min-height:68px}
+.ask .cur{display:inline-block;width:3px;height:1em;background:var(--ink);vertical-align:-3px;margin-left:2px;animation:blink 1s step-end infinite}
+@keyframes blink{50%{opacity:0}}
+.gen{font-family:ui-monospace,Consolas,monospace;font-size:18px;line-height:1.75;color:rgba(255,255,255,.65)}
+.gen div{opacity:0;transition:opacity .25s}
+.gen div.on{opacity:1}
+.gen .ok{color:#7FE0A8}
+.built{display:flex;align-items:center;gap:16px;background:rgba(255,255,255,.08);border-radius:18px;padding:16px 20px;opacity:0;transform:translateY(14px);transition:all .6s cubic-bezier(.2,.8,.2,1)}
+.built.on{opacity:1;transform:none}
+.built .ic{width:54px;height:54px;border-radius:14px;background:#1F6B4A;display:grid;place-items:center;font-size:26px;font-weight:800}
+.built b{font-size:23px}.built small{display:block;font-size:17px;opacity:.6;margin-top:2px}
+.tools{display:flex;gap:14px;margin-top:36px}
+.tools span{font-size:22px;font-weight:750;padding:12px 22px;border-radius:14px;background:#fff;border:1px solid var(--line)}
+
+/* ---------- 10/11 live apps ---------- */
+.app{display:grid;grid-template-columns:440px 1fr;gap:56px;align-items:stretch;height:100%}
+.app-text{display:flex;flex-direction:column;justify-content:center}
+.app-text h2{font-size:64px;margin-bottom:26px}
+.feat{list-style:none;margin-top:30px}
+.feat li{font-size:23px;font-weight:650;padding:13px 0;border-top:1.5px solid var(--line);display:flex;gap:12px}
+.feat li::before{content:"";flex:none;width:9px;height:9px;border-radius:50%;background:var(--c);margin-top:11px}
+.open{margin-top:30px;align-self:flex-start;font-size:20px;font-weight:750;padding:14px 22px;border-radius:14px;background:var(--ink);color:#fff;text-decoration:none;pointer-events:auto}
+.browser{position:relative;border-radius:22px;background:#fff;border:1px solid var(--line);box-shadow:0 40px 90px -40px rgba(14,26,74,.55);display:flex;flex-direction:column;overflow:hidden;margin-top:-30px;height:calc(100% + 30px)}
+.browser .top{display:flex;align-items:center;gap:8px;padding:14px 18px;border-bottom:1px solid var(--line);background:#FAFBFE}
+.browser .top i{width:12px;height:12px;border-radius:50%;background:var(--line)}
+.browser .top span{margin-left:14px;font-size:15px;color:var(--muted);background:var(--paper);padding:6px 14px;border-radius:8px;flex:1}
+.browser .top em{font-style:normal;font-size:14px;font-weight:800;color:#1F8A55;display:flex;align-items:center;gap:6px}
+.browser .top em::before{content:"";width:8px;height:8px;border-radius:50%;background:#22B36B;animation:pulse2 1.4s infinite}
+@keyframes pulse2{50%{opacity:.3}}
+.browser iframe{flex:1;width:100%;border:0;background:#fff}
+.browser .wait{position:absolute;inset:56px 0 0;display:grid;place-items:center;font-size:20px;color:var(--muted);font-weight:600;pointer-events:none}
+.practice{display:inline-block;font-size:19px;font-weight:700;color:var(--ink);background:rgba(245,162,28,.2);padding:8px 14px;border-radius:10px;margin-top:18px}
+
+/* ---------- 12 converge ---------- */
+.conv-svg{position:absolute;left:0;top:0;width:1600px;height:900px}
+.strand{fill:none;stroke-width:10;stroke-linecap:round;stroke-dasharray:1400;stroke-dashoffset:1400}
+.slide.active .strand{animation:draw 2s cubic-bezier(.6,0,.3,1) forwards}
+.slide.active .strand.s2{animation-delay:.25s}
+.slide.active .strand.s3{animation-delay:.5s}
+.flame-g{transform-origin:1180px 470px;transform:scale(.2);opacity:0}
+.slide.active .flame-g{animation:ignite 1.2s cubic-bezier(.2,.9,.2,1.2) 1.9s forwards}
+@keyframes ignite{to{transform:none;opacity:1}}
+.flame-g .flk{transform-origin:1180px 600px;animation:flicker 2.4s ease-in-out infinite}
+@keyframes flicker{50%{transform:scaleY(1.04) scaleX(.97)}}
+.conv-labels{position:absolute;left:120px;top:0;width:620px;height:900px}
+.cl{position:absolute;left:0;width:600px;opacity:0;transform:translateX(-20px);transition:all .6s}
+.slide.active .cl{opacity:1;transform:none}
+.slide.active .cl:nth-child(1){transition-delay:.3s}
+.slide.active .cl:nth-child(2){transition-delay:.55s}
+.slide.active .cl:nth-child(3){transition-delay:.8s}
+.cl b{display:block;font-size:30px;font-weight:850;margin-bottom:6px}
+.cl p{font-size:22px;line-height:1.5;color:rgba(255,255,255,.72);font-weight:550}
+.conv-head{position:absolute;left:120px;top:110px;font-size:52px;font-weight:850;letter-spacing:-.03em}
+.flame-word{position:absolute;left:1030px;top:745px;width:300px;text-align:center;font-size:44px;font-weight:900;letter-spacing:-.03em;opacity:0;transition:opacity .8s 2.6s}
+.slide.active .flame-word{opacity:1}
+
+/* ---------- 13 next ---------- */
+.next{display:grid;grid-template-columns:repeat(3,1fr);gap:30px;margin-top:20px}
+.nx{border-top:6px solid var(--c);padding-top:30px}
+.nx h3{font-size:34px;font-weight:850;letter-spacing:-.03em;line-height:1.3;margin-bottom:16px}
+.nx p{font-size:23px;line-height:1.6;color:var(--muted);font-weight:550}
+.closing{margin-top:76px;font-size:38px;font-weight:800;letter-spacing:-.02em;line-height:1.45}
+
+/* ---------- 14 thanks ---------- */
+.thanks{display:grid;grid-template-columns:1fr auto;align-items:center;gap:80px}
+.thanks h2{font-size:140px;letter-spacing:-.05em;margin-bottom:28px}
+.qrs{display:flex;gap:36px}
+.qr{background:#fff;border-radius:26px;padding:22px 22px 18px;text-align:center;color:var(--ink);text-decoration:none}
+.qr canvas,.qr img{display:block;width:220px;height:220px;image-rendering:pixelated}
+.qr b{display:block;font-size:22px;margin-top:14px}
+.qr small{font-size:16px;color:var(--muted);font-weight:600}
+
+/* mouse glow on dark slides */
+.glow{position:absolute;width:700px;height:700px;border-radius:50%;pointer-events:none;background:radial-gradient(circle,rgba(35,64,166,.45),transparent 65%);transform:translate(-50%,-50%);left:var(--mx,70%);top:var(--my,40%);transition:left .4s ease-out,top .4s ease-out;z-index:0}
+
+@media (prefers-reduced-motion:reduce){
+  *,*::before,*::after{animation-duration:.01ms!important;animation-iteration-count:1!important;transition-duration:.01ms!important;transition-delay:0s!important}
+}
+</style>
+</head>
+<body>
+<div id="viewport">
+<div id="stage">
+
+<div id="chrome-top"><div id="section"><i></i><span></span></div><div id="counter"></div></div>
+
+<!-- 1 -->
+<section class="slide dark cover" data-group="성안중학교 전문적 학습공동체" data-c="#F5A21C">
+  <canvas id="embers"></canvas>
+  <div class="glow"></div>
+  <div class="cover-text">
+    <h1><span><b>하이러닝 및</b></span><span><b>에듀테크</b></span><span><b class="l3">전학공</b></span></h1>
+    <p class="cover-meta">2026 학교 안 전문적 학습공동체 결과 나눔<br><strong>성안중학교</strong> 이삭</p>
+  </div>
+  <div class="logo-wrap"><div class="logo"><img src="assets/seongan-logo.png" alt="성안중학교 교표"></div></div>
+  <p class="hint">→ 키나 스페이스바로 넘기기</p>
+</section>
+
+<!-- 2 -->
+<section class="slide" data-group="들어가기" data-c="#0E1A4A">
+  <h2>우리 전학공을 한눈에</h2>
+  <div class="ov">
+    <ul class="purpose">
+      <li><small>목적 하나</small>하이러닝으로 맞춤형 교육을 하면서, 디지털 기반 인성 교육 역량 키우기</li>
+      <li><small>목적 둘</small>에듀테크 도구로 다양한 학습을 설계해 학생 문해력 높이기</li>
+    </ul>
+    <div class="stats">
+      <div class="stat"><div class="num"><span data-count="7">0</span><em>번</em></div><p>함께 모인 횟수</p></div>
+      <div class="stat"><div class="num"><span data-count="16">0</span><em>시간</em></div><p>함께 공부한 시간</p></div>
+      <div class="stat wide"><div class="num">5.13 ~ 11.4</div><p>2026년 1·2학기</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- 3 -->
+<section class="slide" data-group="들어가기" data-c="#0E1A4A">
+  <h2>일곱 번의 만남</h2>
+  <div class="legend">
+    <span><i style="background:var(--blue)"></i>하이러닝 실습</span>
+    <span><i style="background:var(--flame)"></i>AI 논술형 평가</span>
+    <span><i style="background:var(--ember)"></i>앱 만들어 보기</span>
+  </div>
+  <div class="tl" id="tl">
+    <div class="stop" style="transition-delay:.3s"><div class="d">5.13</div><div class="t">주제 탐구</div><div class="w">자율과제 '문해력' 팀별 계획 세우기</div><div class="tags"><span class="tag e">문해력 공방 구상</span></div></div>
+    <div class="stop" style="transition-delay:.45s"><div class="d">5.27</div><div class="t">공동 실천</div><div class="w">자율과제 관련 교직원 역량 강화 연수</div></div>
+    <div class="stop hl" style="transition-delay:.6s"><div class="d">6.10</div><div class="t">주제 탐구</div><div class="w">하이러닝 기본 과정 실습</div><div class="tags"><span class="tag b">하이러닝</span><span class="tag e">바이브 코딩</span></div></div>
+    <div class="stop hl" style="transition-delay:.75s"><div class="d">9.2</div><div class="t">주제 탐구</div><div class="w">하이러닝 심화 과정 실습</div><div class="tags"><span class="tag f">AI 논술형 평가</span></div></div>
+    <div class="stop hl" style="transition-delay:.9s"><div class="d">9.16</div><div class="t">주제 탐구</div><div class="w">자율과제에 적용하기</div><div class="tags"><span class="tag b">하이러닝</span><span class="tag e">시트 포털</span></div></div>
+    <div class="stop" style="transition-delay:1.05s"><div class="d">10.7</div><div class="t">공동 연구</div><div class="w">수업 사례 발표와 실천 나눔</div></div>
+    <div class="stop today" style="transition-delay:1.2s"><div class="d">11.4</div><div class="t">결과 공유 · 오늘</div><div class="w">한 해 돌아보고 결과 나누기</div></div>
+  </div>
+</section>
+
+<!-- 4 -->
+<section class="slide" data-group="하이러닝 실습" data-c="#2340A6">
+  <div class="sec-tag" style="--c:var(--blue)"><i>1</i>하이러닝 실습</div>
+  <h2>수업 한 시간이 통째로 남는 교실</h2>
+  <div class="hl-flow">
+    <div class="hl-box">
+      <h3>통합학습창</h3>
+      <p class="sub">수업이 이루어지는 화면</p>
+      <div class="chips"><span class="chip">교과서</span><span class="chip">학습지</span><span class="chip">판서</span><span class="chip">영상</span><span class="chip">모둠 활동</span><span class="chip">문제 풀이</span></div>
+    </div>
+    <div class="arrow-flow"></div>
+    <div class="hl-box board">
+      <h3>클래스보드</h3>
+      <p class="sub">수업에서 한 모든 활동이 자동으로 쌓이는 곳</p>
+      <div class="stack"><div>3교시 · 모둠 활동지</div><div>3교시 · 학생 필기</div><div>3교시 · 문제 풀이 결과</div></div>
+    </div>
+  </div>
+  <p class="rename" data-step="1">하이러닝은 지금 <b>경기도 AI 교수학습플랫폼</b>으로 이름이 바뀌었습니다.</p>
+</section>
+
+<!-- 5 -->
+<section class="slide" data-group="하이러닝 실습" data-c="#2340A6">
+  <div class="sec-tag" style="--c:var(--blue)"><i>1</i>하이러닝 실습</div>
+  <h2>통합학습창 기능 여섯 가지를 직접 써 봤습니다</h2>
+  <p class="flip-hint">카드를 누르면 뒤집힙니다</p>
+  <div class="flips" id="flips">
+    <div class="card" tabindex="0"><div class="f"><svg viewBox="0 0 24 24"><path d="M9 11l3 3 8-8"/><path d="M20 12v7a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h9"/></svg><h3>문제 풀이</h3></div><div class="bk"><h3>문제 풀이</h3><p>진단평가를 풀고 결과를 바로 확인</p></div></div>
+    <div class="card" tabindex="0"><div class="f"><svg viewBox="0 0 24 24"><path d="M2 4h7a3 3 0 0 1 3 3v13a2 2 0 0 0-2-2H2z"/><path d="M22 4h-7a3 3 0 0 0-3 3v13a2 2 0 0 1 2-2h8z"/></svg><h3>수업 교재</h3></div><div class="bk"><h3>수업 교재</h3><p>교과서·학습지를 띄우고 모니터링으로 학생별 피드백</p></div></div>
+    <div class="card" tabindex="0"><div class="f"><svg viewBox="0 0 24 24"><rect x="2" y="5" width="20" height="14" rx="3"/><path d="M10 9l5 3-5 3z"/></svg><h3>유튜브</h3></div><div class="bk"><h3>유튜브</h3><p>광고 없이, 재생과 소리는 교사 화면에서만</p></div></div>
+    <div class="card" tabindex="0"><div class="f"><svg viewBox="0 0 24 24"><circle cx="9" cy="8" r="3"/><circle cx="17" cy="9" r="2.5"/><path d="M3 20c0-3.3 2.7-6 6-6s6 2.7 6 6"/><path d="M15 14.5c3 0 6 1.8 6 5.5"/></svg><h3>모둠·발표</h3></div><div class="bk"><h3>모둠·발표</h3><p>모둠 활동지로 협업하고, 발표자는 무작위로 뽑기</p></div></div>
+    <div class="card" tabindex="0"><div class="f"><svg viewBox="0 0 24 24"><path d="M10 14a4 4 0 0 0 5.7 0l3-3a4 4 0 0 0-5.7-5.7l-1 1"/><path d="M14 10a4 4 0 0 0-5.7 0l-3 3a4 4 0 0 0 5.7 5.7l1-1"/></svg><h3>웹 URL</h3></div><div class="bk"><h3>웹 URL</h3><p>다른 웹 도구도 수업 화면 안에서 바로 연결</p></div></div>
+    <div class="card" tabindex="0"><div class="f"><svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="13" rx="2"/><path d="M8 21h8M12 17v4M7 12l3-3 2 2 4-4"/></svg><h3>화이트보드</h3></div><div class="bk"><h3>화이트보드</h3><p>아이디어를 모으고 오답 풀이를 함께</p></div></div>
+  </div>
+  <i data-step="1" hidden></i>
+</section>
+
+<!-- 6 -->
+<section class="slide" data-group="하이러닝 실습" data-c="#2340A6">
+  <div class="sec-tag" style="--c:var(--blue)"><i>1</i>하이러닝 실습</div>
+  <div class="rp">
+    <div>
+      <h2>둘씩 짝지어 교사와 학생이 되어 봤습니다</h2>
+      <p class="lead">한 명은 수업하고, 한 명은 학생이 되어 기능을 하나씩 체험했습니다.</p>
+      <div class="missions" data-step="1">
+        <span>필기도구</span><span>모니터링</span><span>개별 피드백</span><span>질문하기</span><span>발표하기</span><span>영상 보기</span><span>모둠 수업</span><span>화이트보드</span>
+      </div>
+    </div>
+    <div class="devices">
+      <div class="dev s"><div class="who"><i></i>학생 화면</div>
+        <div class="sheet"><div class="ln" style="width:80%"></div><div class="ln"></div><div class="ln" style="width:60%"></div><div class="ln" style="width:90%"></div>
+          <svg class="ink" viewBox="0 0 240 70"><path d="M8 40 C 30 10, 50 60, 75 35 S 120 15, 140 40 S 190 60, 230 25"/></svg>
+        </div>
+      </div>
+      <div class="dev t"><div class="who"><i></i>교사 화면 · 모니터링</div>
+        <div class="mon"><div></div><div class="live"></div><div></div><div></div><div></div><div></div></div>
+      </div>
+      <div class="bubble" data-step="1">잘 썼어요! 근거를 하나 더 써 볼까?</div>
+    </div>
+  </div>
+</section>
+
+<!-- 7 -->
+<section class="slide" data-group="AI 논술형 평가" data-c="#EC3B1F">
+  <div class="sec-tag" style="--c:var(--flame)"><i>2</i>AI 논술형 평가 시스템</div>
+  <h2>학급 수행평가를 한 번에 채점해 봤습니다</h2>
+  <div class="ai">
+    <div class="papers">
+      <div class="paper"><b>1번 학생 답안</b><div class="ln"></div><div class="ln"></div><div class="ln"></div><div class="ln"></div><div class="ln"></div><div class="ln"></div><div class="ln"></div></div>
+      <div class="paper"><b>2번 학생 답안</b><div class="ln"></div><div class="ln"></div><div class="ln"></div><div class="ln"></div><div class="ln"></div><div class="ln"></div><div class="ln"></div></div>
+      <div class="paper"><b>3번 학생 답안</b><div class="ln"></div><div class="ln"></div><div class="ln"></div><div class="ln"></div><div class="ln"></div><div class="ln"></div><div class="ln"></div></div>
+    </div>
+    <div class="engine"><strong>AI 논술형<br>평가 시스템</strong></div>
+    <div class="scores">
+      <div class="score">1번<span>B</span></div>
+      <div class="score">2번<span>A</span></div>
+      <div class="score">3번<span>B</span></div>
+      <div class="score">… 학급 전체<span>✓</span></div>
+    </div>
+  </div>
+  <div class="steps3" data-step="1">
+    <div><b>1</b>답안 올리기</div>
+    <div><b>2</b>AI가 한꺼번에 채점</div>
+    <div><b>3</b>교사가 결과 검토</div>
+  </div>
+</section>
+
+<!-- 8 -->
+<section class="slide" data-group="AI 논술형 평가" data-c="#EC3B1F">
+  <div class="sec-tag" style="--c:var(--flame)"><i>2</i>AI 논술형 평가 시스템</div>
+  <div class="rel" id="rel">
+    <div>
+      <svg class="slope" viewBox="0 0 640 520" id="slope" aria-label="AI 점수와 교사 점수를 학생별로 이은 예시 그림"></svg>
+      <p class="ex">이해를 돕기 위한 예시 그림입니다.</p>
+    </div>
+    <div>
+      <h2>AI 채점, 믿을 만할까?</h2>
+      <ul class="points">
+        <li data-step="1">AI 점수와 교사 점수를 나란히 비교<small>대부분은 비슷하게 나왔습니다.</small></li>
+        <li data-step="2">차이가 큰 답안은 교사가 다시 읽기<small>어디서 어긋났는지 살펴보는 것이 실습의 핵심이었습니다.</small></li>
+        <li data-step="3">AI는 빠른 1차 채점, 최종 판단은 교사</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<!-- 9 -->
+<section class="slide" data-group="앱 만들어 보기" data-c="#F5A21C">
+  <div class="sec-tag" style="--c:#D98A0B"><i>3</i>바이브 코딩</div>
+  <div class="vibe">
+    <div>
+      <h2>말로 설명하면 앱이 됩니다</h2>
+      <p class="lead">코딩을 몰라도, 원하는 것을 말로 설명하면 AI가 앱을 만들어 줍니다. 전학공 예산으로 교재를 사서 함께 공부했습니다.</p>
+      <div class="tools"><span>Claude Code</span><span>Cursor</span></div>
+    </div>
+    <div class="term" id="term">
+      <div class="bar"><i></i><i></i><i></i></div>
+      <div class="ask"><span id="typed"></span><span class="cur"></span></div>
+      <div class="gen" id="gen">
+        <div>교과 어휘 데이터 읽는 중…</div>
+        <div>단어장 화면 만드는 중…</div>
+        <div>플래시카드·퀴즈 만드는 중…</div>
+        <div>시험지 인쇄 기능 추가…</div>
+        <div class="ok">완성했습니다.</div>
+      </div>
+      <div class="built" id="built"><div class="ic">語</div><div><b>SA VocaLab</b><small>성안중 문해력 공방</small></div></div>
+    </div>
+  </div>
+</section>
+
+<!-- 10 -->
+<section class="slide" data-group="앱 만들어 보기" data-c="#F5A21C">
+  <div class="app" style="--c:var(--ember)">
+    <div class="app-text">
+      <div class="sec-tag" style="--c:#D98A0B"><i>3</i>직접 만든 앱 ①</div>
+      <h2>SA VocaLab</h2>
+      <p class="lead" style="font-size:25px">5월에 세운 '성안 문해력 공방' 계획을 실제 앱으로 만들었습니다.</p>
+      <ul class="feat">
+        <li>교과서 단원의 핵심 어휘 고르기</li>
+        <li>단어장·플래시카드·시험지 자동 완성</li>
+        <li>온라인 퀴즈와 문해력 퀴즈까지</li>
+      </ul>
+      <a class="open" href="https://script.google.com/macros/s/AKfycbwzEJNBoVS0Xn9_iUn9X8QmT9HL2jghjgyrXXGjzuITkuqdJVTZIirualwM73B2x9xI/exec" target="_blank" rel="noopener">새 탭에서 열기</a>
+    </div>
+    <div class="browser">
+      <div class="top"><i></i><i></i><i></i><span>SA VocaLab · 성안중 문해력 공방</span><em>실제 앱</em></div>
+      <div class="wait">앱을 불러오는 중입니다</div>
+      <iframe data-src="https://script.google.com/macros/s/AKfycbwzEJNBoVS0Xn9_iUn9X8QmT9HL2jghjgyrXXGjzuITkuqdJVTZIirualwM73B2x9xI/exec" title="SA VocaLab" loading="lazy"></iframe>
+    </div>
+  </div>
+</section>
+
+<!-- 11 -->
+<section class="slide" data-group="앱 만들어 보기" data-c="#F5A21C">
+  <div class="app" style="--c:var(--ember)">
+    <div class="app-text">
+      <div class="sec-tag" style="--c:#D98A0B"><i>3</i>직접 만든 앱 ②</div>
+      <h2>성안 시트 허브</h2>
+      <p class="lead" style="font-size:25px">흩어져 있던 업무용 구글 시트를 한곳에 모았습니다.</p>
+      <ul class="feat">
+        <li>업무 시트 12개를 분류별로 한 화면에</li>
+        <li>오늘의 학사 일정을 첫 화면에서 확인</li>
+        <li>업무를 줄여 수업과 문해력 지도에 더 집중</li>
+      </ul>
+      <span class="practice">실습 차원에서 만들어 본 앱입니다</span>
+      <a class="open" href="https://seongan-sheet-hub.lovable.app/" target="_blank" rel="noopener">새 탭에서 열기</a>
+    </div>
+    <div class="browser">
+      <div class="top"><i></i><i></i><i></i><span>seongan-sheet-hub.lovable.app</span><em>실제 앱</em></div>
+      <div class="wait">앱을 불러오는 중입니다</div>
+      <iframe data-src="https://seongan-sheet-hub.lovable.app/" title="성안 시트 허브" loading="lazy"></iframe>
+    </div>
+  </div>
+</section>
+
+<!-- 12 -->
+<section class="slide dark" data-group="정리" data-c="#F5A21C">
+  <div class="glow"></div>
+  <svg class="conv-svg" viewBox="0 0 1600 900" aria-hidden="true">
+    <defs>
+      <linearGradient id="fg" x1="0" y1="1" x2="0" y2="0"><stop offset="0" stop-color="#EC3B1F"/><stop offset=".7" stop-color="#F56A1F"/><stop offset="1" stop-color="#F5A21C"/></linearGradient>
+    </defs>
+    <path class="strand s1" stroke="#4A6BEA" d="M700 300 C 900 300, 1000 470, 1150 520"/>
+    <path class="strand s2" stroke="#EC3B1F" d="M700 490 C 900 490, 1000 510, 1150 530"/>
+    <path class="strand s3" stroke="#F5A21C" d="M700 680 C 900 680, 1000 560, 1150 540"/>
+    <g class="flame-g"><g class="flk">
+      <path fill="url(#fg)" d="M1180 270 C 1225 345, 1300 395, 1290 500 C 1282 590, 1235 640, 1180 650 C 1125 640, 1078 590, 1070 500 C 1062 410, 1140 360, 1180 270 Z"/>
+      <path fill="#fff" opacity=".9" d="M1185 400 C 1200 450, 1225 480, 1218 540 C 1212 585, 1195 610, 1180 612 C 1162 608, 1148 585, 1146 545 C 1144 495, 1175 470, 1185 400 Z"/>
+    </g></g>
+  </svg>
+  <div class="conv-head">세 갈래가 모인 곳</div>
+  <div class="conv-labels">
+    <div class="cl" style="top:250px"><b style="color:#7D97F5">하이러닝</b><p>읽고 쓰고 나눈 활동이 한 화면에 쌓입니다</p></div>
+    <div class="cl" style="top:440px"><b style="color:#FF7B5F">AI 논술형 평가</b><p>글쓰기 평가와 피드백을 더 자주 할 수 있습니다</p></div>
+    <div class="cl" style="top:630px"><b style="color:var(--ember)">직접 만든 앱</b><p>교과 어휘 학습 도구를 우리 손으로 만들었습니다</p></div>
+  </div>
+  <div class="flame-word">문해력 향상</div>
+</section>
+
+<!-- 13 -->
+<section class="slide" data-group="정리" data-c="#0E1A4A">
+  <h2>앞으로 이렇게 이어가려 합니다</h2>
+  <div class="next">
+    <div class="nx" style="--c:var(--blue)" data-step="1"><h3>하이러닝을 수업의 기본 화면으로</h3><p>배운 기능을 교과 수업에서 꾸준히 써 보고 사례를 나눕니다.</p></div>
+    <div class="nx" style="--c:var(--flame)" data-step="2"><h3>AI 채점은 교사 채점과 함께</h3><p>AI로 1차 채점하고, 교사가 확인하는 흐름을 수행평가에 적용해 봅니다.</p></div>
+    <div class="nx" style="--c:var(--ember)" data-step="3"><h3>만든 앱을 함께 다듬기</h3><p>교과 선생님들의 의견을 받아 어휘 데이터와 기능을 늘려 갑니다.</p></div>
+  </div>
+  <p class="closing" data-step="4">배운 것을 수업에서 써 보고, 필요한 도구는 직접 만들어 본 한 해였습니다.</p>
+</section>
+
+<!-- 14 -->
+<section class="slide dark" data-group="성안중학교 전문적 학습공동체" data-c="#F5A21C">
+  <div class="glow"></div>
+  <div class="thanks" style="position:relative;z-index:1;height:100%">
+    <div>
+      <h2>감사합니다</h2>
+      <p class="lead">휴대폰으로 찍어서 앱을 직접 써 보세요.</p>
+    </div>
+    <div class="qrs">
+      <a class="qr" href="https://script.google.com/macros/s/AKfycbwzEJNBoVS0Xn9_iUn9X8QmT9HL2jghjgyrXXGjzuITkuqdJVTZIirualwM73B2x9xI/exec" target="_blank" rel="noopener" data-qr><b>SA VocaLab</b><small>문해력 공방</small></a>
+      <a class="qr" href="https://seongan-sheet-hub.lovable.app/" target="_blank" rel="noopener" data-qr><b>성안 시트 허브</b><small>업무 시트 포털</small></a>
+    </div>
+  </div>
+</section>
+
+<nav id="thread" aria-label="슬라이드 이동"></nav>
+</div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/qrcode-generator@1.4.4/qrcode.min.js"></script>
+<script>
+(() => {
+  const stage = document.getElementById('stage');
+  const slides = [...document.querySelectorAll('.slide')];
+  const secEl = document.querySelector('#section span');
+  const secDot = document.querySelector('#section i');
+  const counter = document.getElementById('counter');
+  const thread = document.getElementById('thread');
+  const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
+  let cur = 0, step = 0, timers = [];
+
+  // fit 1600x900 stage to window
+  function fit(){
+    const s = Math.min(innerWidth/1600, innerHeight/900);
+    stage.style.transform = `translate(-50%,-50%) scale(${s})`;
+  }
+  addEventListener('resize', fit); fit();
+
+  const maxStep = s => Math.max(0, ...[...s.querySelectorAll('[data-step]')].map(e => +e.dataset.step));
+
+  slides.forEach((s, i) => {
+    const b = document.createElement('button');
+    b.style.setProperty('--c', s.dataset.c);
+    b.setAttribute('aria-label', `${i+1}번 슬라이드`);
+    b.onclick = e => { e.stopPropagation(); go(i, 0); };
+    thread.appendChild(b);
+  });
+
+  function clearTimers(){ timers.forEach(clearTimeout); timers = []; }
+  const later = (fn, ms) => timers.push(setTimeout(fn, reduce ? 0 : ms));
+
+  // ---- per-slide hooks ----
+  const hooks = {
+    1: { enter(s){ s.querySelectorAll('[data-count]').forEach(el => {
+          const to = +el.dataset.count, t0 = performance.now(), dur = reduce ? 1 : 1400;
+          el.textContent = 0;
+          const tick = now => { const p = Math.min(1,(now-t0)/dur); el.textContent = Math.round(to*(1-Math.pow(1-p,3))); if(p<1) requestAnimationFrame(tick); };
+          requestAnimationFrame(tick);
+        }); } },
+    4: { step(s, n){ s.querySelectorAll('.card').forEach((c, i) => {
+          if (n >= 1) later(() => c.classList.add('flipped'), i*140); else c.classList.remove('flipped');
+        }); } },
+    7: { step(s, n){ s.querySelector('#rel').classList.toggle('focus', n === 2); } },
+    8: { enter(s){
+          const msg = '교과서 단원 어휘를 고르면 단어장이랑 퀴즈를 만들어 주는 앱 만들어 줘';
+          const typed = s.querySelector('#typed'), gen = [...s.querySelectorAll('#gen div')], built = s.querySelector('#built');
+          typed.textContent = ''; gen.forEach(g => g.classList.remove('on')); built.classList.remove('on');
+          [...msg].forEach((ch, i) => later(() => typed.textContent += ch, 500 + i*55));
+          const t = 500 + msg.length*55 + 400;
+          gen.forEach((g, i) => later(() => g.classList.add('on'), t + i*550));
+          later(() => built.classList.add('on'), t + gen.length*550 + 200);
+        } },
+  };
+  [9,10].forEach(i => hooks[i] = { enter(s){
+    const f = s.querySelector('iframe');
+    if (!f.src) { f.src = f.dataset.src; f.onload = () => s.querySelector('.wait').remove(); }
+  } });
+
+  function render(entering){
+    slides.forEach((s, i) => {
+      s.classList.toggle('active', i === cur);
+      s.classList.toggle('past', i < cur);
+    });
+    const s = slides[cur];
+    s.querySelectorAll('[data-step]').forEach(el => el.classList.toggle('on', step >= +el.dataset.step));
+    stage.classList.toggle('on-dark', s.classList.contains('dark'));
+    secEl.textContent = s.dataset.group;
+    secDot.style.setProperty('--sec', s.dataset.c);
+    counter.textContent = `${String(cur+1).padStart(2,'0')} / ${slides.length}`;
+    [...thread.children].forEach((b, i) => { b.classList.toggle('now', i === cur); b.classList.toggle('done', i < cur); });
+    const h = hooks[cur];
+    if (entering) { clearTimers(); h?.enter?.(s); }
+    h?.step?.(s, step);
+    history.replaceState(null, '', `#${cur+1}`);
+  }
+
+  function go(i, st){
+    i = Math.max(0, Math.min(slides.length-1, i));
+    const entering = i !== cur;
+    cur = i; step = st === 'end' ? maxStep(slides[i]) : st;
+    render(entering);
+  }
+  const next = () => step < maxStep(slides[cur]) ? (step++, render(false)) : cur < slides.length-1 && go(cur+1, 0);
+  const prev = () => step > 0 ? (step--, render(false)) : cur > 0 && go(cur-1, 'end');
+
+  addEventListener('keydown', e => {
+    if (['ArrowRight','PageDown',' ','Enter'].includes(e.key)) { if (e.key==='Enter' && e.target.classList?.contains('card')) return; e.preventDefault(); next(); }
+    else if (['ArrowLeft','PageUp','Backspace'].includes(e.key)) { e.preventDefault(); prev(); }
+    else if (e.key === 'Home') go(0, 0);
+    else if (e.key === 'End') go(slides.length-1, 0);
+    else if (e.key.toLowerCase() === 'f') document.fullscreenElement ? document.exitFullscreen() : document.documentElement.requestFullscreen?.();
+  });
+
+  // click: card flip, links pass through, otherwise left third = back, rest = forward
+  stage.addEventListener('click', e => {
+    if (e.target.closest('a, iframe, .browser, button')) return;
+    const card = e.target.closest('.card');
+    if (card) { card.classList.toggle('flipped'); return; }
+    const r = stage.getBoundingClientRect();
+    (e.clientX - r.left) < r.width/3 ? prev() : next();
+  });
+  document.querySelectorAll('.card').forEach(c => c.addEventListener('keydown', e => { if (e.key === 'Enter') c.classList.toggle('flipped'); }));
+
+  let tx = null;
+  stage.addEventListener('touchstart', e => tx = e.touches[0].clientX, {passive:true});
+  stage.addEventListener('touchend', e => { if (tx === null) return; const dx = e.changedTouches[0].clientX - tx; if (Math.abs(dx) > 50) dx < 0 ? next() : prev(); tx = null; });
+
+  // glow follows pointer on dark slides
+  stage.addEventListener('pointermove', e => {
+    const r = stage.getBoundingClientRect();
+    stage.style.setProperty('--mx', ((e.clientX-r.left)/r.width*100)+'%');
+    stage.style.setProperty('--my', ((e.clientY-r.top)/r.height*100)+'%');
+  });
+
+  // slope chart (illustrative)
+  (() => {
+    const svg = document.getElementById('slope'), NS = 'http://www.w3.org/2000/svg';
+    const pairs = [[92,90],[85,88],[78,80],[74,71],[66,68],[88,62],[60,58],[55,57],[48,74],[40,42]];
+    const y = v => 470 - (v-30)/70*410;
+    const el = (t, a) => { const n = document.createElementNS(NS, t); for (const k in a) n.setAttribute(k, a[k]); svg.appendChild(n); return n; };
+    el('line',{x1:120,y1:50,x2:120,y2:480,class:'ax'}); el('line',{x1:520,y1:50,x2:520,y2:480,class:'ax'});
+    el('text',{x:120,y:515,'text-anchor':'middle'}).textContent = 'AI 점수';
+    el('text',{x:520,y:515,'text-anchor':'middle'}).textContent = '교사 점수';
+    pairs.forEach(([a,b], i) => {
+      const odd = Math.abs(a-b) > 15;
+      const ln = el('line',{x1:120,y1:y(a),x2:520,y2:y(b),class:'pair'+(odd?' odd':'')});
+      ln.style.animationDelay = (0.2 + i*0.08)+'s';
+      el('circle',{cx:120,cy:y(a),r:8,class:odd?'oddc':''}); el('circle',{cx:520,cy:y(b),r:8,class:odd?'oddc':''});
+    });
+  })();
+
+  // QR codes
+  document.querySelectorAll('[data-qr]').forEach(a => {
+    if (typeof qrcode === 'undefined') return;
+    const q = qrcode(0, 'M'); q.addData(a.href); q.make();
+    const img = new Image(); img.src = q.createDataURL(8, 2); img.alt = a.querySelector('b').textContent + ' QR 코드';
+    a.prepend(img);
+  });
+
+  // embers behind the cover logo
+  (() => {
+    const c = document.getElementById('embers'), ctx = c.getContext('2d');
+    c.width = 1600; c.height = 900;
+    const ps = Array.from({length: 70}, () => spawn(true));
+    function spawn(init){ return { x: 1100 + (Math.random()-.5)*600, y: init ? Math.random()*900 : 940, r: 1 + Math.random()*3.2, v: .4 + Math.random()*1.1, w: Math.random()*6.28, h: Math.random() < .6 ? 18 : 38 }; }
+    function frame(){
+      ctx.clearRect(0,0,1600,900);
+      if (cur === 0) for (const p of ps) {
+        p.y -= p.v; p.w += .02; p.x += Math.sin(p.w)*.5;
+        const a = Math.max(0, Math.min(1, p.y/900));
+        ctx.fillStyle = `hsla(${p.h},95%,58%,${a*.8})`;
+        ctx.beginPath(); ctx.arc(p.x, p.y, p.r, 0, 7); ctx.fill();
+        if (p.y < -10) Object.assign(p, spawn(false));
+      }
+      requestAnimationFrame(frame);
+    }
+    if (!reduce) frame();
+  })();
+
+  const start = Math.max(0, Math.min(slides.length-1, (parseInt(location.hash.slice(1)) || 1) - 1));
+  cur = start; render(true);
+})();
+</script>
+</body>
+</html>
